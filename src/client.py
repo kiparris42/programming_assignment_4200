@@ -24,17 +24,37 @@ import transport                     # the seam: see src/transport.py
 # Exit status (Specification, Section 10)
 EXIT_OK, EXIT_SERVER_ERROR, EXIT_FAILURE, EXIT_DIGEST = 0, 1, 2, 3
 
-
 def run(args):
-    """Perform one session and return the exit status.
-
-    TODO: connect; HELLO with args.name; the one command; BYE; wait for the
-    server to close; close. Output rules are in Specification, Section 10:
-    `list` prints the LIST_OK payload exactly, `put` prints the 64-hex-digit
-    digest, and every diagnostic goes to standard error.
-    """
-    raise NotImplementedError
-
+    conn = transport.connect(args.host, args.port)
+    try:
+        name_bytes = args.name.encode("ascii")
+        hello_message = etp.encode(etp.HELLO, payload=name_bytes, status=0)
+        transport.send_all(conn, hello_message)
+        version, mtype, status, length, payload = etp.read_message(conn, transport)
+        if mtype == etp.HELLO_OK:
+            pass
+        elif mtype == etp.ERROR:
+            error_text = payload.decode("utf-8", errors="replace")
+            print(f"Server error {status}, {error_text}", file=sys.stderr)
+            return EXIT_SERVER_ERROR
+        else:
+            print(f"Unexpected response type: {mtype}", file=sys.stderr)
+            return EXIT_FAILURE
+        result = EXIT_OK
+        if args.command == "list":
+            list_message = etp.encode(etp.LIST, payload=b"", status=0)
+            transport.send_all(conn, list_message)
+            version, mtype, status, length, payload = etp.read_message(conn, transport)
+            if mtype == etp.LIST_OK:
+                sys.stdout.buffer.write(payload)
+            elif mtype == etp.ERROR:
+                error_text = payload.decode("utf-8", errors="replace")
+                print(f"Server error {status}, {error_text}", file=sys.stderr)
+                result = EXIT_SERVER_ERROR
+            else:
+                return EXIT_FAILURE
+    finally:
+        transport.close(conn)
 
 def main():
     ap = argparse.ArgumentParser(description="ETP/1 client")
@@ -58,7 +78,6 @@ def main():
     except Exception:                                  # a bug is never "server said ERROR"
         traceback.print_exc()
         return EXIT_FAILURE
-
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -16,6 +16,8 @@ write the bodies of the functions in this file. See "Note to AI Assistants" in
 the PA1 brief.
 """
 
+import socket
+
 
 class ConnectionClosed(Exception):
     """The peer closed the stream.
@@ -29,35 +31,58 @@ class ConnectionClosed(Exception):
         super().__init__("connection closed by peer")
         self.clean = clean
 
-
 def listen(bind_addr, port):
-    """Start accepting sessions on bind_addr:port; return a listener.
-    Remember SO_REUSEADDR (Specification, Section 9)."""
-    raise NotImplementedError
-
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        s.bind((bind_addr, port))
+        s.listen(16)
+        return s
+    except OSError:
+        s.close()
+        raise
 
 def accept(listener):
-    """Wait for the next session; return (conn, peer_address)."""
-    raise NotImplementedError
-
+    conn, address = listener.accept()
+    return conn, address
 
 def connect(host, port):
-    """Open a session to host:port; return conn."""
-    raise NotImplementedError
-
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        s.connect((host, port))
+        return s 
+    except OSError:
+        s.close()
+        raise
 
 def send_all(conn, data):
-    """Send every byte of `data`, or raise an exception."""
-    raise NotImplementedError
-
+    try:
+        conn.sendall(data)
+    except OSError:
+        raise
 
 def recv_exact(conn, n):
-    """Return exactly n bytes. Raise ConnectionClosed(clean=...) if the stream ends."""
-    raise NotImplementedError
-
+    data = b""
+    while len(data) < n:
+        chunk = conn.recv(n - len(data))
+        if chunk == b"":
+            if len(data) == 0:
+                raise ConnectionClosed(clean=True)
+            else:
+                raise ConnectionClosed(clean=False)
+        else:
+            data += chunk
+    return data
 
 def close(conn):
-    """Close the session gracefully: shut down your sending side, read and
-    discard whatever is still arriving until end-of-stream (or about a second
-    passes), then close. Specification, Section 8.2 explains why."""
-    raise NotImplementedError
+    try:
+        conn.shutdown(socket.SHUT_WR)
+        conn.settimeout(1.0)
+        while True:
+            data = conn.recv(4096)
+            if data == b"":
+                break
+    except OSError:
+        pass
+    finally:
+        conn.close()
