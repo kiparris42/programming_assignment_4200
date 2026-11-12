@@ -8,15 +8,14 @@ answer only if it is true._
 ## 1. Did you use generative AI on this assignment?
 
 - [ ] No. I did not use any generative AI tool for any part of PA1.
-- [ ] Yes, as described below.
+- [x] Yes, as described below.
 
 ## 2. Statement (the syllabus form)
 
-> The author acknowledges the utilization of _[tool name]_, a language model
-> developed by _[provider]_, in the preparation of this assignment. _[Tool name]_
-> was employed in the following manner(s) within this assignment: _[for example:
-> explaining socket errors; reviewing my framing code; drafting the Makefile;
-> suggesting test cases; editing DESIGN.md for clarity]_.
+> The author acknowledges the utilization of ChatGPT and Google (Gemini), a language model
+> developed by OpenAI and Google, in the preparation of this assignment. ChatGPT and Google (Gemini)
+> we're employed in the following manner(s) within this assignment: In the recalling of the 
+  python syntax. In the running of Wireshark on the command line. And the formatting of analysis responses.
 
 ## 3. Log
 
@@ -25,13 +24,21 @@ whole conversations, but keep them in case you are asked._
 
 | # | What I asked (summary) | What I used from the answer | What I changed or rejected | How I checked it was right |
 |---|---|---|---|---|
-| 1 | | | | |
-| 2 | | | | |
+| 1 | Help recalling Python syntax. | Explanations of indentation, file reading/writing, binary encoding, and SHA-256. | Corrected indentation, adjusted variable names, adapted code examples to match what I needed. | Ran Python compilation and the instructor's self-check, which passed all execution tests (30/30). |
+| 2 | Capturing/analyzing network traffic. | Using tcpdump and tshark, and checking TCP TIME-WAIT. | Corrected directory paths and used a 200-byte capture limit instead of the initial unlimited capture setting. | Verified the packet capture, compared uploaded/downloaded files, and inspected the actual TCP packets. |
+| 3 | Help formatting and organizing my packet analysis. | Markdown formatting, tables, and explanations based on measurements we collected from my capture. | Fixed misplaced sections, removed duplicate information, and corrected formatting issues. | Compared the written values against tshark output and verified the eight required capture facts. |
 
 ## 4. Where AI-produced material remains
 
 _List each file and function (or document section) that still contains code or
 text an AI tool generated, even after you edited it. If none, say none._
+
+src/client.py — run(args): Contains code taken and modified from Google's AI-enhanced web search along with traditional web sources such as 
+https://realpython.com/python-sockets/
+https://docs.python.org/3.15/
+etc
+
+evidence/ANALYSIS.md: ChatGPT helped format explanations using measurements collected from our actual packet capture.
 
 ## 5. One thing the AI got wrong — or how you checked it
 
@@ -40,3 +47,5 @@ did not fit the specification, and how you caught it. If you found nothing wrong
 say so and describe how you checked (a test you ran, the part of the
 specification you compared it with). If you did not use AI, describe one thing
 you got wrong yourself and how you caught it._
+
+ChatGPT initially suggested using `tcpdump -s 0` to capture network traffic, but the assignment required a 200-byte snapshot length. We caught this by checking the assignment instructions, changed the command to use `-s 200`, and verified that the resulting packet capture reported a snapshot length of 200 bytes.
