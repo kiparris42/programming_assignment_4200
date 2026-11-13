@@ -3,7 +3,7 @@
 **Student:** Kaelyn Parris (kiparris42), Peyton Seagraves (Peyton-Seagraves)
 **Course:** CSC 4200 — Fall 2026
 **Language:** Python
-**Submitted commit:** _the SHA you paste into Canvas_
+**Submitted commit:** 04de851d80328f77f2861c5ee63ba7ff8995ffbf
 
 ## Build and run
 
