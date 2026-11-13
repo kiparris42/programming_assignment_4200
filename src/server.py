@@ -177,8 +177,6 @@ def handle_session(conn, peer, root):
                 error(conn, peer, mtype, length, etp.NOT_READY, "Send HELLO first")
                 break
 
-            #Responses for Each Type
-
             if mtype == etp.HELLO:
                 ok = (not ready and 1 <= len(payload) <= 32 and all(0x21 <= b <= 0x7E for b in payload))
                 if not ok:
@@ -209,10 +207,10 @@ def handle_session(conn, peer, root):
     except (OSError, EOFError):
              pass
 
-    #If connection closes after an accepted header but no payload       
+    #if connection closes after an accepted header but no payload       
     except (transport.ConnectionClosed) as e:
         if not e.clean:
-            print("connection did not close clean: {e}", file=sys.stderr)
+            print(f"connection did not close clean: {e}", file=sys.stderr)
 
     finally:
         try:

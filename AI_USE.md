@@ -12,10 +12,10 @@ answer only if it is true._
 
 ## 2. Statement (the syllabus form)
 
-> The author acknowledges the utilization of ChatGPT and Google (Gemini), a language model
-> developed by OpenAI and Google, in the preparation of this assignment. ChatGPT and Google (Gemini)
+> The author acknowledges the utilization of ChatGPT, Google (Gemini), and Claude, a language model
+> developed by OpenAI, Google, and Anthropic in the preparation of this assignment. ChatGPT, Google (Gemini), and Claude
 > we're employed in the following manner(s) within this assignment: In the recalling of the 
-  python syntax. In the running of Wireshark on the command line. And the formatting of analysis responses.
+  python syntax. In the running of Wireshark on the command line. And the formatting of analysis responses. And bugfixing the server. And explaining the server instructions easier.
 
 ## 3. Log
 
@@ -27,6 +27,8 @@ whole conversations, but keep them in case you are asked._
 | 1 | Help recalling Python syntax. | Explanations of indentation, file reading/writing, binary encoding, and SHA-256. | Corrected indentation, adjusted variable names, adapted code examples to match what I needed. | Ran Python compilation and the instructor's self-check, which passed all execution tests (30/30). |
 | 2 | Capturing/analyzing network traffic. | Using tcpdump and tshark, and checking TCP TIME-WAIT. | Corrected directory paths and used a 200-byte capture limit instead of the initial unlimited capture setting. | Verified the packet capture, compared uploaded/downloaded files, and inspected the actual TCP packets. |
 | 3 | Help formatting and organizing my packet analysis. | Markdown formatting, tables, and explanations based on measurements we collected from my capture. | Fixed misplaced sections, removed duplicate information, and corrected formatting issues. | Compared the written values against tshark output and verified the eight required capture facts. |
+| 4 | Help with explaining the ETP protocol. | What order to try to work on and idea of isolating each response type into seperate functions | Removed excess imported libraries. | Checked against the self-check execution tests. |
+| 5 | Bugfixing and checking the server. | Added most of the try except blocks. | Removed excess imported libraries. | Checked against the self-check execution tests. |
 
 ## 4. Where AI-produced material remains
 
@@ -37,6 +39,8 @@ src/client.py — run(args): Contains code taken and modified from Google's AI-e
 https://realpython.com/python-sockets/
 https://docs.python.org/3.15/
 etc
+
+All functions written in server.py were bugfixed by Claude.
 
 evidence/ANALYSIS.md: ChatGPT helped format explanations using measurements collected from our actual packet capture.
 

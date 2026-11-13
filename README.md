@@ -1,8 +1,8 @@
 # PA1 — ETP/1 Client and Server
 
-**Student:** _your full name_ (`your-github-username`)
-**Course:** CSC 4200 / CSC 5200 (delete one) — Fall 2026
-**Language:** _C or Python_
+**Student:** Kaelyn Parris (kiparris42), Peyton Seagraves (Peyton-Seagraves)
+**Course:** CSC 4200 — Fall 2026
+**Language:** Python
 **Submitted commit:** _the SHA you paste into Canvas_
 
 ## Build and run
@@ -23,16 +23,64 @@ repository: N / 10` lines from `make check`. List any test
 that fails and what you believe the cause is. Known limitations go here, not in a
 footnote. An honest "S16 fails because ..." earns more than silence._
 
+Server tests
+  S01  PASS   2 pt  HELLO handshake and HELLO_OK format
+  S02  PASS   2 pt  LIST format, sorting and filtering
+  S03  PASS   1 pt  GET a small file
+  S04  PASS   1 pt  GET a 2 MiB file
+  S05  PASS   2 pt  PUT 300 KB, digest, then GET it back
+  S06  PASS   1 pt  PUT and GET empty files
+  S07  PASS   1 pt  NOT_FOUND is non-fatal
+  S08  PASS   1 pt  BAD_NAME blocks traversal; non-fatal
+  S09  PASS   2 pt  requests arriving in fragments
+  S10  PASS   2 pt  several requests in one write
+  S11  PASS   1 pt  unknown TYPE: BAD_TYPE, payload skipped
+  S12  PASS   1 pt  bad VERSION is fatal
+  S13  PASS   1 pt  oversized LEN is fatal, nothing allocated
+  S14  PASS   1 pt  request before HELLO is fatal
+  S15  PASS   1 pt  BYE: BYE_OK, then the server closes
+  S16  PASS   2 pt  8 clients served while 2 others stall
+  S17  PASS   1 pt  survives clients that vanish mid-transfer
+  S18  PASS   1 pt  restart on the same port (SO_REUSEADDR)
+
+Client tests (a scripted peer plays the server)
+  C01  PASS   1 pt  list: fragmented response printed exactly; sends BYE
+  C02  PASS   2 pt  get: 200 KB in fragments written to disk
+  C03  PASS   1 pt  put: payload layout and digest printed
+  C04  PASS   1 pt  server ERROR: exit 1 and a stderr message
+  C05  PASS   1 pt  digest mismatch: exit 3
+  C06  PASS   0 pt  no server: exit 2 (not scored)
+
+Evidence and documents
+  - capture: 2 TCP connection(s); the GET session looks complete
+  - ANALYSIS.md: every etp-facts field is filled in (values are checked at grading)
+
+Repository (scored by the same rules at grading)
+  build 3/3  (assumed: --no-build)
+  required files 2/2
+  commit history 3/3  (10 commits on 6 day(s); full marks: 5 or more after the starter commit, on 3 or more days)
+  transport seam 2/2
+  Build and repository: 10 / 10
+
+Execution: 30 / 30 points
+This is the Execution part of the rubric only. Evidence, design and documentation
+are scored by people, using the bands in the PA1 brief.
+
 ## Files
 
 | File | What it is |
 |---|---|
-| `src/...` | |
+| `src/client.py` | Client that connects and gives requests to the server |
+| `src/etp.py` | Builds and reads ETP messages |
+| `src/server.py` | Server that that gives each connection a thread to perform actions |
+| `src/transport_tcp.py` | TCP transport protocol for the server |
+| `src/transport.py` | Imports the transport protocol to be used in the other files |
 | `DESIGN.md` | design document |
 | `AI_USE.md` | AI-use disclosure and log |
 | `evidence/pa1-capture.pcap` | loopback capture of my PUT and GET sessions |
 | `evidence/time-wait.txt` | `ss` output showing TIME-WAIT after my session |
 | `evidence/ANALYSIS.md` | my capture analysis |
+
 
 ---
 
@@ -46,4 +94,4 @@ generative AI tool helped me produce. My use of AI tools is disclosed in full in
 `AI_USE.md`. The capture and measurements in `evidence/` come from my own programs,
 run by me.
 
-**Signed:** _full name_  **Date:** _date_
+**Signed:** Kaeyln Parris, Peyton Seagraves  **Date:** 11/12/2026
